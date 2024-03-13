@@ -8,8 +8,6 @@
 import re
 import string
 
-from collections import OrderedDict
-
 #### CODE ####
 
 def prime_numbers(n): # Gets all the prime factors that multiply up to n
