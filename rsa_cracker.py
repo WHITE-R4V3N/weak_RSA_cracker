@@ -8,6 +8,8 @@
 import re
 import string
 
+from collections import OrderedDict
+
 #### CODE ####
 
 def prime_numbers(n): # Gets all the prime factors that multiply up to n
@@ -57,15 +59,24 @@ for ch in list(string.printable):
     cipher_alphabet[ct] = ch # Save as encrypted, ascii pair in dictionary
 
 ## Convert cipher to ASCII ##
-message = list()
-found_letter = None
+found_letter = []
+found_dict = {}
+message = ''
 
 for key in cipher_alphabet:
-    found_letter = list(re.finditer(str(key), cipher)) # Find all instances of the letter
+    found_letter += list(re.finditer(str(key), cipher)) # Find all instances of the letter
 
-    for letter in found_letter:
-        pos = str(letter.span()).replace('(', '').replace(')', '').replace(',', '').split(' ') # Take out only the span
-        #print(f'{cipher_alphabet[int(cipher[int(pos[0]):int(pos[1])])]}') 
-        message[int(pos[0]):int(pos[1])] = cipher_alphabet[int(cipher[int(pos[0]):int(pos[1])])] # Replace the cipher with the ASCII Value
+for letter in found_letter:
+    pos = str(letter.span()).replace('(', '').replace(')', '').replace(',', '').split(' ') # Take out only the span
+    text = letter.group() # Take the part of cipher found.
+    #print(f'Letter: {cipher_alphabet[int(cipher[int(pos[0]):int(pos[1])])]} | Cipher: {text:4} | Position: {pos}')
+    found_dict[int(pos[0])] = cipher_alphabet[int(cipher[int(pos[0]):int(pos[1])])] # Creates a dictionary of starting pos: 'cipher'
 
-print(f'{message}') # We are getting closer now. Ever so closer, but not 100% there yet.
+sorted_dict = dict(sorted(found_dict.items())) # Sort the dictionary
+
+# Print the sorted dictionary as a string
+for l in sorted_dict:
+    message += sorted_dict[l]
+print(f'Possible String:\n{message}')
+
+# This will try its best to crack all of the cipher. It will make errors.
